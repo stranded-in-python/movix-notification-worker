@@ -20,7 +20,7 @@ class SenderSndgrd(SendGridAPIClient):
             emails<list>: contains any # of `sendgrid.helpers.mail.Mail`.
         """
         for email in emails:
-            await self.send_email(email)
+            await self.send_one(email)
         LOGGER.info("Successfully delivered a batch")
 
     async def send_one(self, email: Mail) -> None:
@@ -31,7 +31,7 @@ class SenderSndgrd(SendGridAPIClient):
             email<sendgrid.helpers.mail.Mail>: single mail object.
         """
         try:
-            self.send(request_body=email)
+            self.send(email)
         except urllib.error.HTTPError as e:
             LOGGER.error(
                 "Failed to send email. From: %s, To:%s, Content: %s with: %s",

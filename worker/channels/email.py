@@ -15,4 +15,4 @@ class EmailChannel(EmailChannelABC):
             json.loads(msg), type(self.validator).__name__
         )
         if validated_messages:
-            await self.sender(validated_messages)
+            await self.sender.send_many(validated_messages)

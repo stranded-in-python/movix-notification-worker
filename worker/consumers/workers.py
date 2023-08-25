@@ -5,8 +5,10 @@ from utils.loggers import LOGGER
 
 
 class AsyncWorker(ReconnectingConsumer):
-    def __init__(self, comm_channel: ChannelABC, queue_name: str, routing_key: str):
-        super().__init__()
+    def __init__(
+        self, amqp_url: str, comm_channel: ChannelABC, queue_name: str, routing_key: str
+    ):
+        super().__init__(amqp_url)
         self.comm_channel = comm_channel
         self.QUEUE = queue_name
         self.ROUTING_KEY = routing_key

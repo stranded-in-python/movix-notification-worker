@@ -7,7 +7,7 @@ class ChannelABC(ABC):
         self.parser = parser
 
     @abstractmethod
-    async def handle_message(msg: bytes):
+    async def handle_message(self, msg: bytes):
         raise NotImplementedError
 
 
@@ -17,12 +17,12 @@ class EmailChannelABC(ChannelABC):
         self.parser = parser
 
     @abstractmethod
-    async def handle_message(msg: bytes):
+    async def handle_message(self, msg: bytes):
         raise NotImplementedError
 
     @abstractmethod
-    async def send_email(recipient: list, message: str):
+    async def send_email(self, recipient: list, message: str):
         raise NotImplementedError
 
-    async def send_many_emails(recipients: list, message: str):
+    async def send_many_emails(self, recipients: list, message: str):
         raise NotImplementedError
