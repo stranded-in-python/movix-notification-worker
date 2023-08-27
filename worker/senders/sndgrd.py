@@ -1,5 +1,4 @@
 import os
-import urllib
 
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
@@ -7,7 +6,7 @@ from utils.loggers import LOGGER
 
 
 class SenderSndgrd(SendGridAPIClient):
-    def __init__(self):
+    def __init__(self, api_key: str):
         super().__init__(os.environ.get("SENDGRID_API_KEY"))
 
     async def send_many(self, emails: list[Mail]) -> None:
@@ -21,7 +20,6 @@ class SenderSndgrd(SendGridAPIClient):
         """
         for email in emails:
             await self.send_one(email)
-        LOGGER.info("Successfully delivered a batch")
 
     async def send_one(self, email: Mail) -> None:
         """
@@ -32,11 +30,9 @@ class SenderSndgrd(SendGridAPIClient):
         """
         try:
             self.send(email)
-        except urllib.error.HTTPError as e:
+        except Exception as e:
             LOGGER.error(
-                "Failed to send email. From: %s, To:%s, Content: %s with: %s",
-                email.from_email,
-                email.to,
-                email.content,
+                "Failed to send email %s with:%s",
+                email,
                 e,
             )

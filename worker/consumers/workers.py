@@ -1,10 +1,11 @@
 from channels.abstract import ChannelABC
-from rmqconsumer import ReconnectingConsumer
 from utils.async_utils import sync
 from utils.loggers import LOGGER
 
+from .rmqconsumer import Consumer
 
-class AsyncWorker(ReconnectingConsumer):
+
+class AsyncConsumer(Consumer):
     def __init__(
         self, amqp_url: str, comm_channel: ChannelABC, queue_name: str, routing_key: str
     ):
@@ -12,9 +13,9 @@ class AsyncWorker(ReconnectingConsumer):
         self.comm_channel = comm_channel
         self.QUEUE = queue_name
         self.ROUTING_KEY = routing_key
+        self._tasks = set()
 
-    @sync
-    async def consumer(self, _unused_channel, basic_deliver, properties, body):
+    def on_message(self, _unused_channel, basic_deliver, properties, body):
         """Invoked by pika when a message is delivered from RabbitMQ. The
         channel is passed for your convenience. The basic_deliver object that
         is passed in carries the exchange, routing key, delivery tag and
@@ -34,4 +35,9 @@ class AsyncWorker(ReconnectingConsumer):
             properties.app_id,
             body,
         )
-        await self.comm_channel.handle_message(body)
+
+        task = self._connection.ioloop.create_task(
+            self.comm_channel.handle_message(body)
+        )
+        self._tasks.add(task)
+        task.add_done_callback(self._tasks.discard)

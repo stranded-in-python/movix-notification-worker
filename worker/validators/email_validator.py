@@ -1,7 +1,8 @@
-from abstract import ValidatorABC
 from models.emails import EmailMessages
 from sendgrid.helpers.mail import Content, From, Mail, To
 from utils.loggers import LOGGER
+
+from .abstract import ValidatorABC
 
 
 class ValidatorEmail(ValidatorABC):
@@ -12,12 +13,12 @@ class ValidatorEmail(ValidatorABC):
             LOGGER.error("Message from the broker is invalid. Msg: %s", e)
             return None
 
-    def validadate_for_sender(self, msg: dict, sender_name: str) -> list[Mail] | None:
+    def validate_for_sender(self, msg: dict, sender_name: str) -> list[Mail] | None:
         messages = []
         validated = self.validate_for_send(msg)
         if validated:
             match sender_name:
-                case "SendGridAPIClient":
+                case "SenderSndgrd":
                     for recipient in validated.recipients:
                         try:
                             messages.append(
@@ -34,4 +35,6 @@ class ValidatorEmail(ValidatorABC):
                             LOGGER.error("Failed to validate email for sendgrid: %s", e)
                             return None
                     return messages
-        return None
+                case _:
+                    LOGGER.error("No validator for sender %s ", sender_name)
+                    return None

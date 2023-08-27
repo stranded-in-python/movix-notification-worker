@@ -1,3 +1,4 @@
+import asyncio
 import functools
 import time
 
@@ -24,13 +25,8 @@ class Consumer:
 
     EXCHANGE = "message"
     EXCHANGE_TYPE = ExchangeType.topic
-    QUEUE = None
-    ROUTING_KEY = None
 
-    def __init__(
-        self,
-        amqp_url,
-    ):
+    def __init__(self, amqp_url: str):
         """Create a new instance of the consumer class, passing in the AMQP
         URL used to connect to RabbitMQ.
 
@@ -39,11 +35,14 @@ class Consumer:
         """
         self.should_reconnect = False
         self.was_consuming = False
+        # self._loop = loop
 
         self._connection = None
         self._channel = None
         self._closing = False
         self._consumer_tag = None
+        self.QUEUE = None
+        self.ROUTING_KEY = None
         self._url = amqp_url
         self._consuming = False
         # In production, experiment with higher prefetch values
@@ -299,8 +298,7 @@ class Consumer:
         if self._channel:
             self._channel.close()
 
-    @sync
-    async def on_message(self, _unused_channel, basic_deliver, properties, body):
+    def on_message(self, _unused_channel, basic_deliver, properties, body):
         """Invoked by pika when a message is delivered from RabbitMQ. The
         channel is passed for your convenience. The basic_deliver object that
         is passed in carries the exchange, routing key, delivery tag and
@@ -391,10 +389,10 @@ class ReconnectingConsumer:
 
     """
 
-    def __init__(self, amqp_url):
+    def __init__(self, amqp_url, consumer: Consumer):
         self._reconnect_delay = 0
         self._amqp_url = amqp_url
-        self._consumer = Consumer(self._amqp_url)
+        self._consumer = consumer
 
     def run(self):
         while True:
