@@ -1,8 +1,8 @@
-import os
-
+import validators.email_validators as email_val
 from channels.email import EmailChannel
+from core.config import settings
+from senders.brevo import SenderBrevo
 from senders.sndgrd import SenderSndgrd
-from validators.email_validator import ValidatorEmail
 
 from .rmqconsumer import ReconnectingConsumer
 from .workers import AsyncConsumer
@@ -10,9 +10,26 @@ from .workers import AsyncConsumer
 
 class WorkerFactory:
     @staticmethod
-    def build_sndrgd_worker(amqp_url: str, queue_name: str, routing_key: str):
+    def build_sndgrd_worker(
+        queue_name: str,
+        routing_key: str,
+        amqp_url: str = settings.amqp_url,
+    ):
         channel = EmailChannel(
-            SenderSndgrd(os.environ.get("SENDGRID_API_KEY")), ValidatorEmail()
+            SenderSndgrd(settings.sendgrid_api_key), email_val.ValidatorEmailSndgrd()
+        )
+        consumer = AsyncConsumer(amqp_url, channel, queue_name, routing_key)
+        worker = ReconnectingConsumer(amqp_url, consumer)
+        return worker
+
+    @staticmethod
+    def build_brevo_worker(
+        queue_name: str,
+        routing_key: str,
+        amqp_url: str = settings.amqp_url,
+    ):
+        channel = EmailChannel(
+            SenderBrevo(settings.brevo_api_key), email_val.ValidatorEmailBrevo()
         )
         consumer = AsyncConsumer(amqp_url, channel, queue_name, routing_key)
         worker = ReconnectingConsumer(amqp_url, consumer)

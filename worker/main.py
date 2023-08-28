@@ -31,10 +31,16 @@ if __name__ == "__main__":
     # Multiprocessing with workers
     logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
     worker_factory = WorkerFactory()
-    sendgrid_worker = worker_factory.build_sndrgd_worker(
-        amqp_url="amqp://guest:guest@localhost:5672/%2F",
-        queue_name="hello",
-        routing_key="hello",
+    sendgrid_worker = worker_factory.build_sndgrd_worker(
+        queue_name="sendgrid",
+        routing_key="sendgrid",
+    )
+    brevo_worker = worker_factory.build_brevo_worker(
+        queue_name="brevo", routing_key="brevo"
     )
     process_0 = Process(target=sendgrid_worker.run)
-    process_0.run()
+    process_1 = Process(target=brevo_worker.run)
+    process_0.start()
+    process_1.start()
+    process_0.join()
+    process_1.join()

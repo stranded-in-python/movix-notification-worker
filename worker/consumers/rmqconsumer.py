@@ -1,12 +1,10 @@
-import asyncio
 import functools
 import time
 
 import pika
+from core.loggers import LOGGER
 from pika.adapters.asyncio_connection import AsyncioConnection
 from pika.exchange_type import ExchangeType
-from utils.async_utils import sync
-from utils.loggers import LOGGER
 
 
 class Consumer:

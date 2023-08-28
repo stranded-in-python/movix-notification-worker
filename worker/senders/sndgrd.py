@@ -1,13 +1,13 @@
-import os
-
+from core.loggers import LOGGER
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from utils.loggers import LOGGER
+
+from .abstract import SenderABC
 
 
-class SenderSndgrd(SendGridAPIClient):
+class SenderSndgrd(SenderABC, SendGridAPIClient):
     def __init__(self, api_key: str):
-        super().__init__(os.environ.get("SENDGRID_API_KEY"))
+        super().__init__(api_key)
 
     async def send_many(self, emails: list[Mail]) -> None:
         """

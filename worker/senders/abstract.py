@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
 
-from pydantic import BaseModel
-
 
 class SenderABC(ABC):
     @abstractmethod

@@ -1,6 +1,5 @@
 from channels.abstract import ChannelABC
-from utils.async_utils import sync
-from utils.loggers import LOGGER
+from core.loggers import LOGGER
 
 from .rmqconsumer import Consumer
 
