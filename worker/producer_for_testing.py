@@ -68,12 +68,7 @@ channel.basic_publish(
     routing_key="",
     body=json.dumps(message).encode("utf-8"),
 )
+
+
 print(" [x] Sent 'Hello World!'")
-
-# while True:
-#     try:
-#         pass
-#     except KeyboardInterrupt:
-#         connection.close()
-
 connection.close()
