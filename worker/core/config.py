@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     brevo_api_key: str = Field("NoKey", env="BREVO_API_KEY")
 
     amqp_url: str = Field("amqp://guest:guest@localhost:5672/%2F", env="AMQP_URL")
+    consume_prefetch_count: int = Field(2, env="CONSUME_PREFETCH_COUNT")
 
 
 settings = Settings()

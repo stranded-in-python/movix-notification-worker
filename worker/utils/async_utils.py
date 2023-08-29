@@ -8,3 +8,10 @@ def sync(f):
         return asyncio.get_event_loop().run_until_complete(f(*args, **kwargs))
 
     return wrapper
+
+
+def call_async(f):
+    async def _fn():
+        await f()
+
+    return _fn
