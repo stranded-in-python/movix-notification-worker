@@ -1,14 +1,14 @@
 import asyncio
 
 import aio_pika
-from aio_pika import AMQPException
+from channels.abstract import ChannelABC
 from core.config import settings
 from core.loggers import LOGGER
 
 
 class IncommingMessageQueue:
-    def __init__(self, amqp_url: str, queue_name: str):
-        self._amqp_url = amqp_url
+    def __init__(self, comm_channels: list[ChannelABC]):
+        self._amqp_url = settings.amqp_url
 
         self._connection = None
         self._channel = None
@@ -16,6 +16,8 @@ class IncommingMessageQueue:
         self._dead_exchange = None
         self._main_queue = None
         self._dead_queue = None
+
+        self.comm_channels = comm_channels
 
     async def connect(
         self, loop: asyncio.BaseEventLoop
@@ -88,6 +90,11 @@ class IncommingMessageQueue:
             if self.can_retry(message.headers):
                 LOGGER.info("Message doesn't smell")
                 # какая-то логика
+                for comm_channel in self.comm_channels:
+                    try:
+                        await comm_channel.handle_message(message.body)
+                    except Exception as e:
+                        LOGGER.error(e)
                 return
             LOGGER.warning("Message %s smells and declined!", message.body)
             await message.reject(requeue=False)

@@ -1,3 +1,4 @@
+from core.config import settings
 from core.loggers import LOGGER
 from models.emails import EmailMessages
 from sendgrid.helpers.mail import Content, From, Mail, To
@@ -8,10 +9,16 @@ from .abstract import ValidatorABC
 
 class ValidatorEmail(ValidatorABC):
     def validate_for_send(self, msg: dict) -> EmailMessages | None:
+        reformatted_message = {"message": msg.get("message")}
+        reformatted_message.update(**msg.get(settings.key_for_email_channel))
         try:
-            return EmailMessages(**msg)
+            return EmailMessages(**reformatted_message)
         except Exception as e:
-            LOGGER.error("Message from the broker is invalid. Msg: %s", e)
+            LOGGER.error(
+                "Message from the broker is invalid for email channel. Msg:%s, error:%s",
+                msg,
+                e,
+            )
             return None
 
 

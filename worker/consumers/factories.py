@@ -34,3 +34,12 @@ class WorkerFactory:
         consumer = AsyncConsumer(amqp_url, channel, queue_name, routing_key)
         worker = ReconnectingConsumer(amqp_url, consumer)
         return worker
+
+
+class CommChannelFactory:
+    @staticmethod
+    def build_brevo_email_channel() -> EmailChannel:
+        channel = EmailChannel(
+            SenderBrevo(settings.brevo_api_key), email_val.ValidatorEmailBrevo()
+        )
+        return channel

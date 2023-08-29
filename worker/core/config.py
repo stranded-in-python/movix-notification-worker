@@ -16,5 +16,7 @@ class Settings(BaseSettings):
     RMQ_dead_ttl: int = Field(60 * 1000, env="RMQ_DEAD_TTL")
     RMQ_retry_count: int = Field(2, env="RMQ_RETRY_COUNT")
 
+    key_for_email_channel: str = Field("email")
+
 
 settings = Settings()

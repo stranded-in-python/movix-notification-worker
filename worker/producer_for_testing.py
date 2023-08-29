@@ -1,3 +1,5 @@
+import json
+
 import pika
 from core.config import settings
 
@@ -40,11 +42,31 @@ channel.queue_bind(settings.RMQ_dead_queue, settings.RMQ_dead_exchange)
 # channel.basic_publish(exchange="", routing_key="hello", body=b'{"hello": "world"}')
 # channel.basic_publish(exchange="", routing_key="hello", body=b'ahah')
 
+# old format
+# channel.basic_publish(
+#     exchange=settings.RMQ_main_exchange,
+#     routing_key="",
+#     body=b'{"sender": "sergeusprecious@gmail.com", "recipients": ["sergey.koltunov.228@gmail.com"], "subject": "testing", "message": "<strong>i am message!</strong>"}',
+# )
+
+message = {
+    "notification-id": "notification-id",
+    "payload": {
+        "mime-type": "mime-type",
+        "message": "<strong>i am message!</strong>",
+        "email": {
+            "sender": "sergeusprecious@gmail.com",
+            "recipients": ["sergey.koltunov.228@gmail.com"],
+            "subject": "testing",
+        },
+        "telegram": {"recipients": ["sergey.koltunov.228@gmail.com"]},
+    },
+}
 
 channel.basic_publish(
     exchange=settings.RMQ_main_exchange,
     routing_key="",
-    body=b'{"sender": "sergeusprecious@gmail.com", "recipients": ["sergey.koltunov.228@gmail.com"], "subject": "testing", "message": "<strong>i am message!</strong>"}',
+    body=json.dumps(message).encode("utf-8"),
 )
 print(" [x] Sent 'Hello World!'")
 
