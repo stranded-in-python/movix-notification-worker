@@ -6,3 +6,10 @@ services:
     ports:
       - 15672:15672
       - 5672:5672
+
+  postgres:
+    image: postgres:14
+    env_file:
+      - ./.envs/.postgres
+    ports:
+      - 5432:5432

@@ -85,18 +85,20 @@ class IncommingMessageQueue:
     async def process_message(
         self, message: aio_pika.abc.AbstractIncomingMessage
     ) -> None:
-        async with message.process():
+        async with message.process(ignore_processed=True):
             LOGGER.info("Received message %s", message.body)
             if self.can_retry(message.headers):
                 LOGGER.info("Message doesn't smell")
                 for comm_channel in self.comm_channels:
-                    try:
-                        await comm_channel.handle_message(message.body)
-                    except Exception as e:
-                        LOGGER.error(e)
+                    result = await comm_channel.handle_message(message.body)
+                    if isinstance(result, Exception):
+                        await message.reject(requeue=False)
+                        LOGGER.info("Message rejected!")
                 return
-            LOGGER.warning("Message %s smells and declined!", message.body)
-            await message.reject(requeue=False)
+            LOGGER.warning(
+                "Message %s smells and acquired to clean queue!", message.body
+            )
+            await message.ack()
 
     async def start_consuming(self, loop: asyncio.BaseEventLoop):
         self._connection = await self.connect(loop)

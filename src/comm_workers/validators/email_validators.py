@@ -23,46 +23,34 @@ class ValidatorEmail(ValidatorABC):
 
 
 class ValidatorEmailSndgrd(ValidatorEmail):
-    def validate_for_sender(self, msg: dict) -> list[Mail] | None:
-        messages = []
+    def validate_for_sender(self, msg: dict) -> Mail | None:
         validated = self.validate_for_send(msg)
         if validated:
-            for recipient in validated.recipients:
-                try:
-                    messages.append(
-                        Mail(
-                            from_email=From(validated.sender),
-                            to_emails=To(recipient),
-                            subject=validated.subject,
-                            html_content=Content("text/html", validated.message),
-                        )
-                    )
-                except Exception as e:
-                    LOGGER.error("Failed to validate email for sendgrid: %s", e)
-                    continue
-            return messages
-        return None
+            try:
+                messages = Mail(
+                    from_email=From(validated.sender),
+                    to_emails=[To(recipient) for recipient in validated.recipients],
+                    subject=validated.subject,
+                    html_content=validated.message,
+                )
+            except Exception as e:
+                LOGGER.error("Failed to validate emails %s for brevo: %s", messages, e)
+                return None
+        return messages
 
 
 class ValidatorEmailBrevo(ValidatorEmail):
-    def validate_for_sender(self, msg: dict) -> list[SendSmtpEmail] | None:
-        messages = []
+    def validate_for_sender(self, msg: dict) -> SendSmtpEmail | None:
         validated = self.validate_for_send(msg)
         if validated:
-            for recipient in validated.recipients:
-                try:
-                    message = SendSmtpEmail(
-                        sender={"email": validated.sender},
-                        to=[{"email": recipient}],
-                        subject=validated.subject,
-                        html_content=validated.message,
-                        # headers={"Some-Custom-Name": "unique-id-1234"},
-                    )
-                    messages.append(message)
-                except Exception as e:
-                    LOGGER.error(
-                        "Failed to validate email %s for brevo: %s", message, e
-                    )
-                    continue
-            return messages
-        return None
+            try:
+                messages = SendSmtpEmail(
+                    sender={"email": validated.sender},
+                    to=[{"email": recipient} for recipient in validated.recipients],
+                    subject=validated.subject,
+                    html_content=validated.message,
+                )
+            except Exception as e:
+                LOGGER.error("Failed to validate emails %s for brevo: %s", messages, e)
+                return None
+        return messages

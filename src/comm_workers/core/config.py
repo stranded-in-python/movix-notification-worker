@@ -20,5 +20,19 @@ class Settings(BaseSettings):
 
     key_for_email_channel: str = Field("email")
 
+    psql_db_name: str = Field("yamp_movies_db", env="POSTGRES_DB")
+    psql_user: str = Field("yamp_dummy", env="POSTGRES_USER")
+    psql_password: str = Field("qweasd123", env="POSTGRES_PASSWORD")
+    psql_host: str = Field("localhost", env="POSTGRES_HOST")
+    psql_port: int = Field(5432, env="POSTGRES_PORT")
+    wait_up_to: int = Field(60 * 60 * 12)
+    waiting_interval: int = Field(60 * 30)
+    waiting_factor: int = Field(2)
+    first_nap: float = Field(0.1)
+
+    templates_collection: str = Field("templates", env="TEMPLATES_COLLECTION")
+    templates_id_field: str = Field("id", env="TEMPLATES_ID_FIELD")
+    templates_body_field: str = Field("body", env="TEMPLATES_BODY_FIELD")
+
 
 settings = Settings()

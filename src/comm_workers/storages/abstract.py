@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
+from uuid import UUID
 
 
-class SenderABC(ABC):
+class StorageABC(ABC):
     @abstractmethod
-    async def send(self, message: object) -> None:
+    async def get_item(item_id: UUID):
         raise NotImplementedError

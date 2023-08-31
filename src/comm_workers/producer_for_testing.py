@@ -49,19 +49,19 @@ channel.queue_bind(settings.RMQ_dead_queue, settings.RMQ_dead_exchange)
 #     body=b'{"sender": "sergeusprecious@gmail.com", "recipients": ["sergey.koltunov.228@gmail.com"], "subject": "testing", "message": "<strong>i am message!</strong>"}',
 # )
 
-message = {
-    "notification-id": "notification-id",
-    "payload": {
-        "mime-type": "mime-type",
-        "message": "<strong>i am message!</strong>",
-        "email": {
-            "sender": "sergeusprecious@gmail.com",
-            "recipients": ["sergey.koltunov.228@gmail.com"],
-            "subject": "testing",
-        },
-        "telegram": {"recipients": ["sergey.koltunov.228@gmail.com"]},
-    },
-}
+# message = {
+#     "notification-id": "notification-id",
+#     "payload": {
+#         "mime-type": "mime-type",
+#         "message": "<strong>i am message!</strong>",
+#         "email": {
+#             "sender": "sergeusprecious@gmail.com",
+#             "recipients": ["sergey.koltunov.228@gmail.com"],
+#             "subject": "testing",
+#         },
+#         "telegram": {"recipients": ["sergey.koltunov.228@gmail.com"]},
+#     },
+# }
 
 # message = {
 #     "notification-id": "notification-id",
@@ -76,6 +76,19 @@ message = {
 #         "telegram": {"recipients": ["sergey.koltunov.228@gmail.com"]},
 #     },
 # }
+
+message = {
+    "template_id": "91a5f236-e101-4afe-853c-2d6a43dea2c7",
+    "context": {"company": "Вася"},
+    "email": {
+        "sender": "sergeusprecious@gmail.com",
+        "to": [
+            "sergey.koltunov.228@gmail.com",
+            "zhopa",
+        ],  # "zhopaasdasdgr12312dgdggk123lkmx@gmail.com"],
+        "subject": "testing",
+    },
+}
 
 channel.basic_publish(
     exchange=settings.RMQ_main_exchange,

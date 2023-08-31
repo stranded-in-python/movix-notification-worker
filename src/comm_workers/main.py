@@ -3,9 +3,9 @@ from consumers.messagequeue import IncommingMessageQueue
 
 
 def main():
-    factory = CommChannelFactory()
+    factory_comm = CommChannelFactory()
     needed_comm_channels = [
-        factory.build_brevo_email_channel()
+        factory_comm.build_brevo_email_channel()
     ]  # сюда добавляются и другие если есть
     mq = IncommingMessageQueue(needed_comm_channels)
     mq.start_running()
