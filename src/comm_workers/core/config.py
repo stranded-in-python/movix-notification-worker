@@ -4,6 +4,8 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
 
+    logger_level: str = Field("INFO", env="LOGGER_LEVEL")
+
     sendgrid_api_key: str = Field("NoKey", env="SNDGRD_API_KEY")
     brevo_api_key: str = Field("NoKey", env="BREVO_API_KEY")
 

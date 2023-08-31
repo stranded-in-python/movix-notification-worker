@@ -1,7 +1,7 @@
 import asyncio
 
 import aio_pika
-from channels.abstract import ChannelABC
+from comm_channels.abstract import ChannelABC
 from core.config import settings
 from core.loggers import LOGGER
 
@@ -89,7 +89,6 @@ class IncommingMessageQueue:
             LOGGER.info("Received message %s", message.body)
             if self.can_retry(message.headers):
                 LOGGER.info("Message doesn't smell")
-                # какая-то логика
                 for comm_channel in self.comm_channels:
                     try:
                         await comm_channel.handle_message(message.body)

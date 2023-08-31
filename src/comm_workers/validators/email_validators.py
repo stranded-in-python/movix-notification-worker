@@ -56,7 +56,7 @@ class ValidatorEmailBrevo(ValidatorEmail):
                         to=[{"email": recipient}],
                         subject=validated.subject,
                         html_content=validated.message,
-                        headers={"Some-Custom-Name": "unique-id-1234"},
+                        # headers={"Some-Custom-Name": "unique-id-1234"},
                     )
                     messages.append(message)
                 except Exception as e:

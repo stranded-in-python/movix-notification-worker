@@ -63,6 +63,20 @@ message = {
     },
 }
 
+# message = {
+#     "notification-id": "notification-id",
+#     "payload": {
+#         "mime-type": "mime-type",
+#         "message": "<strong>i am message!</strong>",
+#         "email": {
+#             "sender": "sergeusprecious@gmail.com",
+#             "recipients": ["example@mail.com", "zhopa"],
+#             "subject": "testing",
+#         },
+#         "telegram": {"recipients": ["sergey.koltunov.228@gmail.com"]},
+#     },
+# }
+
 channel.basic_publish(
     exchange=settings.RMQ_main_exchange,
     routing_key="",

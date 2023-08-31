@@ -15,7 +15,7 @@ class EmailChannel(ChannelABC):
     async def handle_message(self, msg: bytes) -> None | Exception:
         try:
             validated_messages = self.validator.validate_for_sender(
-                json.loads(msg.decode("utf-8"))["payload"]
+                json.loads(msg.decode("utf-8")).get("payload")
             )
         except Exception as e:
             LOGGER.error("Could not handle the message %s with exception: %s", msg, e)
