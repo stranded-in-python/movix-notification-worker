@@ -106,9 +106,7 @@ class PostgresConnectionManager(ConnectionManager):
 
         return self.back_connection()(self._fetchall)(sql, sql_vars, itersize)
 
-    def fetchone(
-        self, sql: str, sql_vars: Any = None, itersize: int = 0
-    ) -> Iterable[DictRow]:
+    def fetchone(self, sql: str, sql_vars: Any = None, itersize: int = 0) -> DictRow:
         """
         cursor.fetchone() with reconnect
         """
@@ -138,7 +136,7 @@ class DBTemplatePSQL(DBTemplateABC):
         self.templates = settings.templates_collection
         self.templates_id_field = settings.templates_id_field
 
-    async def get_one_template(self, template_id: UUID):
+    async def get_one_template(self, template_id: UUID) -> str:
         raw_template = self.connection_manager.fetchone(
             f"SELECT body from {self.templates} WHERE {self.templates_id_field} = '{template_id}'"
         )

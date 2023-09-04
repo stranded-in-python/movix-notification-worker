@@ -84,8 +84,9 @@ message = {
         "sender": "sergeusprecious@gmail.com",
         "to": [
             "sergey.koltunov.228@gmail.com",
-            "zhopa",
-        ],  # "zhopaasdasdgr12312dgdggk123lkmx@gmail.com"],
+            # "zhopa",
+            "zhopaasdasdgr12312dgdggk123lkmx@gmail.com",
+        ],
         "subject": "testing",
     },
 }

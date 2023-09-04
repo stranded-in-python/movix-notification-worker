@@ -14,9 +14,9 @@ class SenderBrevo(SenderABC):
         self.configuration.api_key["api-key"] = api_key
         self.api_client = TransactionalEmailsApi(ApiClient(self.configuration))
 
-    async def send(self, email: SendSmtpEmail) -> None:
+    async def send(self, email: SendSmtpEmail) -> None | Exception:
         try:
-            return self.api_client.send_transac_email(email, async_req=True).get()
+            self.api_client.send_transac_email(email, async_req=True)
         except Exception as e:
             LOGGER.error(
                 "Failed to send email %s with:%s",
@@ -38,7 +38,7 @@ class SenderSndgrd(SenderABC, SendGridAPIClient):
             email<sendgrid.helpers.mail.Mail>: single mail object.
         """
         try:
-            self.send(email)
+            await self.send(email)
         except ApiException as e:
             LOGGER.error(
                 "Failed to send email %s with:%s",

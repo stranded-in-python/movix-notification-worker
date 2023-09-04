@@ -8,5 +8,5 @@ class TemplateEnricher(TemplateEnricherABC):
         self.environment = jinja2.Environment()
 
     def render_template(self, template: str, context: dict) -> str:
-        template = self.environment.from_string(template)
-        return template.render(**context)
+        jinja_template = self.environment.from_string(template)
+        return jinja_template.render(**context)

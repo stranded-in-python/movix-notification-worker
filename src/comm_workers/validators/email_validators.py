@@ -34,9 +34,10 @@ class ValidatorEmailSndgrd(ValidatorEmail):
                     html_content=validated.message,
                 )
             except Exception as e:
-                LOGGER.error("Failed to validate emails %s for brevo: %s", messages, e)
+                LOGGER.error("Failed to validate emails %s for brevo: %s", msg, e)
                 return None
-        return messages
+            return messages
+        return None
 
 
 class ValidatorEmailBrevo(ValidatorEmail):
@@ -51,6 +52,7 @@ class ValidatorEmailBrevo(ValidatorEmail):
                     html_content=validated.message,
                 )
             except Exception as e:
-                LOGGER.error("Failed to validate emails %s for brevo: %s", messages, e)
+                LOGGER.error("Failed to validate emails %s for brevo: %s", msg, e)
                 return None
-        return messages
+            return messages
+        return None
