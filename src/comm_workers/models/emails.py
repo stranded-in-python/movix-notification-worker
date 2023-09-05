@@ -1,8 +1,8 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr, Field
 
 
 class EmailMessages(BaseModel):
-    sender: str
-    recipients: list = Field(alias="to")
+    sender: EmailStr = Field(alias="from_")
+    recipients: list[EmailStr] = Field(alias="to_")
     subject: str
     message: str

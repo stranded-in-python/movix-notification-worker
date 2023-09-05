@@ -10,6 +10,21 @@ services:
   postgres:
     image: postgres:14
     env_file:
-      - ./.envs/.postgres
+      - ./.envs/.local/.postgres
     ports:
       - 5432:5432
+
+  # worker1:
+  #   build:
+  #     context: ./compose/local/worker
+  #     dockerfile: Dockerfile
+  #   image: result/latest
+  #   env_file:
+  #     - ./.envs/.local/.postgres
+  #     - ./.envs/.local/.rabbitmq
+  #     - ./.envs/.local/.worker
+  #   depends_on:
+  #     - postgres
+  #   # profiles:
+  #   #   - "notification"
+  #   command: "/start"

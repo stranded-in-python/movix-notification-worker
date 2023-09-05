@@ -1,4 +1,5 @@
 import asyncio
+import json
 
 import aio_pika
 from comm_channels.abstract import ChannelABC
@@ -7,7 +8,7 @@ from core.loggers import LOGGER
 
 
 class IncommingMessageQueue:
-    def __init__(self, comm_channels: list[ChannelABC]):
+    def __init__(self, comm_channels: dict[str, ChannelABC]):
         self._amqp_url = settings.amqp_url
 
         self._connection = None
@@ -21,7 +22,7 @@ class IncommingMessageQueue:
 
     async def connect(
         self, loop: asyncio.BaseEventLoop
-    ) -> aio_pika.connection.Connection:
+    ) -> aio_pika.abc.AbstractRobustConnection:
         LOGGER.info("Connecting to %s", self._amqp_url)
         return await aio_pika.connect_robust(self._amqp_url, loop=loop)
 
@@ -89,12 +90,16 @@ class IncommingMessageQueue:
             LOGGER.info("Received message %s", message.body)
             if self.can_retry(message.headers):
                 LOGGER.info("Message doesn't smell")
-                for comm_channel in self.comm_channels:
-                    result = await comm_channel.handle_message(message.body)
-                    if isinstance(result, Exception):
-                        await message.reject(requeue=False)
-                        LOGGER.info("Message rejected!")
-                return
+                message_dict = json.loads(message.body.decode("utf-8"))
+                try:
+                    needed_channel = self.comm_channels[message_dict.get("type_")]
+                except KeyError:
+                    LOGGER.error("There's no comm channel for type %s", needed_channel)
+                result = await needed_channel.handle_message(message_dict)
+                if isinstance(result, Exception):
+                    await message.reject(requeue=False)
+                    LOGGER.warning("Message rejected!")
+                return None
             LOGGER.warning(
                 "Message %s smells and acquired to clean queue!", message.body
             )

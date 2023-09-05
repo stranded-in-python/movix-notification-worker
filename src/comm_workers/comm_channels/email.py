@@ -22,10 +22,9 @@ class EmailChannel(ChannelABC):
         self.storage = storage
         self.enricher = enricher
 
-    async def handle_message(self, msg: bytes) -> None | Exception:
-        msg_dict = json.loads(msg.decode("utf-8"))
+    async def handle_message(self, msg: dict) -> None | Exception:
         try:
-            template_id = msg_dict.pop("template_id")
+            template_id = msg.pop("template_id")
         except KeyError as e:
             LOGGER.error("There is no template_id in message %s", msg)
             return e
@@ -37,7 +36,7 @@ class EmailChannel(ChannelABC):
             )
             return e
         try:
-            message_context = msg_dict.pop("context")
+            message_context = msg.pop("context")
         except KeyError as e:
             LOGGER.error("There is no context for the message %s", msg)
             return e
@@ -50,11 +49,12 @@ class EmailChannel(ChannelABC):
                 e,
             )
             return e
-        msg_dict["message"] = rendered_message
+        msg["message"] = rendered_message
         try:
-            validated_messages = self.validator.validate_for_sender(msg_dict)
+            validated_messages = self.validator.validate_for_sender(msg)
         except Exception as e:
             LOGGER.error("Could not validate the message %s with exception: %s", msg, e)
             return e
-        if validated_messages:
+        if not isinstance(validated_messages, Exception):
             return await self.sender.send(validated_messages)
+        return validated_messages

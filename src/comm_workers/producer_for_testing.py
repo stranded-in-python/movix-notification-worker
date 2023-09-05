@@ -77,25 +77,36 @@ channel.queue_bind(settings.RMQ_dead_queue, settings.RMQ_dead_exchange)
 #     },
 # }
 
-message = {
+# message = {
+#     "template_id": "91a5f236-e101-4afe-853c-2d6a43dea2c7",
+#     "context": {"company": "Вася"},
+#     "email": {
+#         "sender": "sergeusprecious@gmail.com",
+#         "to": [
+#             "sergey.koltunov.228@gmail.com",
+#             # "zhopa",
+#             # "zhopaasdasdgr12312dgdggk123lkmx@gmail.com",
+#             "sergeusprecious@gmail.com",
+#         ],
+#         "subject": "testing",
+#     },
+# }
+
+new_message = {
     "template_id": "91a5f236-e101-4afe-853c-2d6a43dea2c7",
     "context": {"company": "Вася"},
-    "email": {
-        "sender": "sergeusprecious@gmail.com",
-        "to": [
-            "sergey.koltunov.228@gmail.com",
-            # "zhopa",
-            # "zhopaasdasdgr12312dgdggk123lkmx@gmail.com",
-            "sergeusprecious@gmail.com",
-        ],
-        "subject": "testing",
+    "type_": "email",
+    "recipients": {
+        "to_": ["sergey.koltunov.228@gmail.com", "sergeusprecious@gmail.com"],
+        "from_": "sergeusprecious@gmail.com",
+        "subject": "Company Context",
     },
 }
 
 channel.basic_publish(
     exchange=settings.RMQ_main_exchange,
     routing_key="",
-    body=json.dumps(message).encode("utf-8"),
+    body=json.dumps(new_message).encode("utf-8"),
 )
 
 
