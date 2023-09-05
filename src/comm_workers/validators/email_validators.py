@@ -1,7 +1,7 @@
 from core.config import settings
 from core.loggers import LOGGER
 from models.emails import EmailMessages
-from sendgrid.helpers.mail import Content, From, Mail, To
+from sendgrid.helpers.mail import From, Mail, To
 from sib_api_v3_sdk import SendSmtpEmail
 
 from .abstract import ValidatorABC
@@ -47,7 +47,7 @@ class ValidatorEmailBrevo(ValidatorEmail):
             try:
                 messages = SendSmtpEmail(
                     sender={"email": validated.sender},
-                    to=[{"email": recipient} for recipient in validated.recipients],
+                    bcc=[{"email": recipient} for recipient in validated.recipients],
                     subject=validated.subject,
                     html_content=validated.message,
                 )
