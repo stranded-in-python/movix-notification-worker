@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
-from models.users import UserSettings
+from db.notifications import BaseNotificationDatabase
+from models.users import UserChannels
 
 
 class QueueABC(ABC):
@@ -8,8 +9,15 @@ class QueueABC(ABC):
         ...
 
 
+class UserServiceABC(ABC, UserChannels):
+    async def get_users_channels() -> list[UserChannels]:
+        ...
+
+
 class NotificationServiceABC(ABC):
     queue: QueueABC
+    notification_db: BaseNotificationDatabase
+    user_service: UserServiceABC
 
     def send_message():
         ...
