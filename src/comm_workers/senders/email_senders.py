@@ -16,7 +16,8 @@ class SenderBrevo(SenderABC):
 
     async def send(self, email: SendSmtpEmail) -> None | Exception:
         try:
-            self.api_client.send_transac_email(email, async_req=True)
+            result = self.api_client.send_transac_email(email, async_req=True)
+            result.get()
         except Exception as e:
             LOGGER.error(
                 "Failed to send email %s with:%s",
