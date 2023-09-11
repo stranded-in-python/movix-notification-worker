@@ -32,7 +32,9 @@ class Settings(BaseSettings):
     waiting_factor: int = Field(2)
     first_nap: float = Field(0.1)
 
-    templates_collection: str = Field("templates", env="TEMPLATES_COLLECTION")
+    templates_collection: str = Field(
+        "notification.template", env="TEMPLATES_COLLECTION"
+    )
     templates_id_field: str = Field("id", env="TEMPLATES_ID_FIELD")
     templates_body_field: str = Field("body", env="TEMPLATES_BODY_FIELD")
 
