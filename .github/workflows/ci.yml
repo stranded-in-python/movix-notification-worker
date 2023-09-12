@@ -1,4 +1,4 @@
-name: "CI: Admin"
+name: "CI: Notif-Worker"
 
 # Enable Buildkit and let compose use it to speed up image building
 env:
@@ -56,7 +56,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.TOKEN }}
 
-      - name: Build movix-admin:latest Docker image
+      - name: Build movix-notification-worker:latest Docker image
         uses: docker/build-push-action@v4
         with:
           file: "./compose/production/Dockerfile"
@@ -67,7 +67,7 @@ jobs:
             maintainer=${{ github.actor }}
             build-date=${{ github.event.head_commit.timestamp }}
 
-      - name: Build movix-admin:dev Docker image
+      - name: Build movix-notification-worker:dev Docker image
         uses: docker/build-push-action@v4
         with:
           file: "./compose/local/Dockerfile"
