@@ -11,6 +11,8 @@ The message comsumed up to 3 times (it is configured by env). If it consumed for
 
 ## How do I use it?
 
+To run project, refer to [Movix main repo](https://github.com/stranded-in-python/movix)
+
 Set up proper producer for the durable queue and send the message using the according format. The worker would get the UUID of the template from database,
 validate, render it and send to user(s).
 
