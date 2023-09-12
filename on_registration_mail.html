@@ -12,7 +12,7 @@
 
     <p>Для подтверждения вашей авторизации, пожалуйста, нажмите на кнопку:</p>
 
-    <form action="{{ context.url_verify }}" method="post">
+    <form action="{{ context.url_verify }}" method="post" onsubmit="submitForm(event)">
         <input type="hidden" name="verification_token" value="{{ context.verification_token }}">
 
         <input type="submit" value="Подтвердить авторизацию">

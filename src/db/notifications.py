@@ -4,6 +4,7 @@ from uuid import UUID
 
 import orjson
 from fastapi import Depends
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import async_sessionmaker  # noqa
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine  # noqa
 
@@ -21,7 +22,7 @@ class BaseNotificationDatabase(t.Generic[ID, NP]):
 
     async def get_notification_users(
         self, notification_id: ID, offset: int
-    ) -> list[ID]:
+    ) -> AsyncGenerator[list[UUID], None]:
         """Get a notification users"""
         raise NotImplementedError
 
@@ -38,7 +39,8 @@ class SANotificationDB(BaseNotificationDatabase[UUID, Notification]):
 
     async def get_notification(self, notification_id: UUID) -> Notification | None:
         """Get a notification data"""
-        query_text = """
+        query_text = text(
+            """
             WITH notification_data AS (
                 SELECT id, template_id, created_at, channels
                 FROM notifications.notification
@@ -55,7 +57,8 @@ class SANotificationDB(BaseNotificationDatabase[UUID, Notification]):
                 INNER JOIN notifications.context ON notification_template_data.context_id = context.id
             )
             SELECT * FROM notification_data_with_context;
-        """
+            """
+        )
         query_params = {"notification_id": notification_id}
 
         result = await self.session.execute(query_text, query_params)
@@ -76,33 +79,6 @@ class SANotificationDB(BaseNotificationDatabase[UUID, Notification]):
         return notification
 
     async def get_notification_users(
-        self, notification_id: UUID, offset: int
-    ) -> list[UUID]:
-        """Get notification users"""
-        query_text = """
-            WITH notification_data AS (
-                SELECT recipients_id
-                FROM notifications.notification
-                WHERE id = :notification_id
-            )
-            SELECT user_group_membership.user_id
-            FROM notification_data
-            INNER JOIN notifications.user_group_membership
-            ON notification_data.recipients_id = user_group_membership.group_id
-            OFFSET :offset;
-        """
-        query_params = {"notification_id": notification_id, "offset": offset}
-
-        result = await self.session.execute(query_text, query_params)
-
-        rows = result.fetchall()
-        if len(rows) == 0:
-            return None
-
-        user_ids = [row[0] for row in rows]
-        return user_ids
-
-    async def get_notification_users_generator(
         self, notification_id: UUID, users_limit: int
     ) -> AsyncGenerator[list[UUID], None]:
         """Get a notification users"""

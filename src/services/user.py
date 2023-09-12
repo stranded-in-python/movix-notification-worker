@@ -72,5 +72,5 @@ class UserService(UserServiceABC):
         return users_channels
 
 
-def get_user_service() -> UserService:
-    return UserService(httpx.AsyncClient())
+async def get_user_service() -> UserService:
+    yield UserService(httpx.AsyncClient)
