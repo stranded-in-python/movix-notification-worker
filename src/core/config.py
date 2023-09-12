@@ -37,9 +37,10 @@ class PublisherProperties(BaseSettings):
     queue: str = "movix-notification"
     routing_key: str = "notification.email"
 
-    auth_user_rights_endpoint: str = 'http://auth:8000/api/v1/users/user_id/roles'
-    access_token_secret: SecretStr = SecretStr('ACCESS')
-    access_token_audience: str = 'movix:auth'
+    auth_user_rights_endpoint: str = "http://auth:8000/api/v1/users/user_id/roles"
+    access_token_secret: SecretStr = SecretStr("ACCESS")
+    access_token_audience: str = "movix:auth"
+
 
 class EventsProperties(BaseSettings):
     on_registration_template_id: UUID = UUID(int=0)

@@ -4,7 +4,7 @@ import jwt
 import orjson
 from pydantic import SecretStr
 
-JWT_ALGORITHM = 'HS256'
+JWT_ALGORITHM = "HS256"
 
 
 def orjson_dumps(v, *, default=None):

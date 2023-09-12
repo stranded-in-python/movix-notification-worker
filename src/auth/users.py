@@ -10,7 +10,7 @@ from core.config import settings
 from core.utils import read_token as jwt_read_token
 from models import models
 
-oauth_scheme = OAuth2PasswordBearer(tokenUrl='token')
+oauth_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 class TokenReadingError(Exception):
@@ -22,10 +22,10 @@ class NotAuthorizedError(Exception):
 
 
 async def get_user_rights(user: models.User, token: str) -> models.User:
-    url = str(settings.auth_user_rights_endpoint).replace('user_id', str(user.id))
+    url = str(settings.auth_user_rights_endpoint).replace("user_id", str(user.id))
     headers = {
-        'Authorization': f'Bearer {token}',
-        'X-Request-Id': f'movix-notification:{uuid.uuid4()}',
+        "Authorization": f"Bearer {token}",
+        "X-Request-Id": f"movix-notification:{uuid.uuid4()}",
     }
 
     async with httpx.AsyncClient() as client:
@@ -48,9 +48,9 @@ async def read_token(token: str) -> models.User:
     except jwt.exceptions.PyJWTError as e:
         raise TokenReadingError(str(e))
 
-    user_id = contents.get('sub')
+    user_id = contents.get("sub")
     if not user_id:
-        raise TokenReadingError('Ivalid token: no user id found')
+        raise TokenReadingError("Ivalid token: no user id found")
 
     return models.User(uuid=user_id)
 
