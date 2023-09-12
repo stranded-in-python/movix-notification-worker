@@ -7,7 +7,11 @@ class NotificationSettingsChannelDBABC(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def get(self, user_id: UUID):
+    async def get(self, user_id: UUID, channel: str):
+        raise NotImplementedError
+
+    @abstractmethod
+    async def get_many(self, user_id: UUID):
         raise NotImplementedError
     
     @abstractmethod
@@ -25,7 +29,11 @@ class NotificationSettingsDBABC(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def get(self, user_id: UUID):
+    async def get(self, user_id: UUID, notification_id: UUID):
+        raise NotImplementedError
+
+    @abstractmethod
+    async def get_many(self, user_id: UUID):
         raise NotImplementedError
     
     @abstractmethod

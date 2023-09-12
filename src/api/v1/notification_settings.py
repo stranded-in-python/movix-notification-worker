@@ -6,7 +6,7 @@ from auth.users import get_current_user
 from models.notification_settings import ChannelSettings, NotificationSettings
 from services.abc import (NotificationChannelSettingsServiceABC,
                           NotificationSettingsServiceABC)
-from services.notification_settings import NotificationSettingsService
+from services.notification_settings import get_channel_settings, get_notification_settings
 
 router = APIRouter()
 
@@ -25,8 +25,8 @@ async def change_channel_settings(
     enabled: bool,
     user=Depends(get_current_user),
     notification_channel_settings_service: NotificationChannelSettingsServiceABC = Depends(
-        get_notification_settings_service
-    ),  # !!!!!!!!!!!!!!!!
+        get_channel_settings
+    ),
 ) -> Response(status_code=status.HTTP_200_OK):
     pass
 
@@ -43,7 +43,7 @@ async def change_channel_settings(
 async def change_channel_settings(
     user=Depends(get_current_user),
     notification_channel_settings_service: NotificationChannelSettingsServiceABC = Depends(
-        get_notification_settings_service
+        get_channel_settings
     ),
 ) -> list[ChannelSettings]:
     pass
@@ -63,7 +63,7 @@ async def change_channel_settings(
     enabled: bool,
     user=Depends(get_current_user),
     notification_channel_settings_service: NotificationChannelSettingsServiceABC = Depends(
-        get_notification_settings_service
+        get_channel_settings
     ),
 ) -> Response(status_code=status.HTTP_200_OK):
     pass
@@ -82,7 +82,7 @@ async def change_channel_settings(
     channel: str,
     user=Depends(get_current_user),
     notification_channel_settings_service: NotificationChannelSettingsServiceABC = Depends(
-        get_notification_settings_service
+        get_channel_settings
     ),
 ) -> Response(status_code=status.HTTP_200_OK):
     pass
@@ -102,7 +102,7 @@ async def change_notification_settings(
     disabled: bool,
     user=Depends(get_current_user),
     notification_settings_service: NotificationSettingsServiceABC = Depends(
-        get_notification_settings_service
+        get_notification_settings
     ),
 ) -> Response(status_code=status.HTTP_200_OK):
     pass
@@ -120,7 +120,7 @@ async def change_notification_settings(
 async def change_notification_settings(
     user=Depends(get_current_user),
     notification_settings_service: NotificationSettingsServiceABC = Depends(
-        get_notification_settings_service
+        get_notification_settings
     ),
 ) -> list[NotificationSettings]:
     pass
@@ -140,7 +140,7 @@ async def change_notification_settings(
     disabled: bool,
     user=Depends(get_current_user),
     notification_settings_service: NotificationSettingsServiceABC = Depends(
-        get_notification_settings_service
+        get_notification_settings
     ),
 ) -> Response(status_code=status.HTTP_200_OK):
     pass
@@ -158,7 +158,7 @@ async def change_notification_settings(
     notification_id: UUID,
     user=Depends(get_current_user),
     notification_settings_service: NotificationSettingsServiceABC = Depends(
-        get_notification_settings_service
+        get_notification_settings
     ),
 ) -> Response(status_code=status.HTTP_200_OK):
     pass
