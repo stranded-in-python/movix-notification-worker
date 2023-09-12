@@ -1,9 +1,10 @@
 import sib_api_v3_sdk.configuration
-from core.loggers import LOGGER
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from sib_api_v3_sdk import ApiClient, SendSmtpEmail, TransactionalEmailsApi
 from sib_api_v3_sdk.rest import ApiException
+
+from core.loggers import LOGGER
 
 from .abstract import SenderABC
 
@@ -19,11 +20,7 @@ class SenderBrevo(SenderABC):
             result = self.api_client.send_transac_email(email, async_req=True)
             result.get()
         except Exception as e:
-            LOGGER.error(
-                "Failed to send email %s with:%s",
-                email,
-                e,
-            )
+            LOGGER.error("Failed to send email %s with:%s", email, e)
             return e
 
 
@@ -41,9 +38,5 @@ class SenderSndgrd(SenderABC, SendGridAPIClient):
         try:
             await self.send(email)
         except ApiException as e:
-            LOGGER.error(
-                "Failed to send email %s with:%s",
-                email,
-                e.reason,
-            )
+            LOGGER.error("Failed to send email %s with:%s", email, e.reason)
             return e.reason

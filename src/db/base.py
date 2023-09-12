@@ -3,10 +3,11 @@ import time
 from abc import ABC, abstractmethod
 from typing import Callable
 
-from core.config import settings
-from core.loggers import LOGGER
 from psycopg2 import OperationalError
 from psycopg2.extensions import connection as pg_connection
+
+from core.config import settings
+from core.loggers import LOGGER
 
 
 class Connector(ABC):

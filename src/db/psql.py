@@ -2,11 +2,12 @@ from contextlib import closing
 from typing import Any, Iterable, cast
 from uuid import UUID
 
-from core.config import settings
-from core.loggers import LOGGER
 from psycopg2 import connect as pg_connect
 from psycopg2.extensions import connection as pg_connection
 from psycopg2.extras import DictCursor, DictRow
+
+from core.config import settings
+from core.loggers import LOGGER
 
 from .abstract import DBTemplateABC
 from .base import ConnectionManager, Connector

@@ -2,6 +2,7 @@ import asyncio
 import json
 
 import aio_pika
+
 from comm_channels.abstract import ChannelABC
 from core.config import settings
 from core.loggers import LOGGER
@@ -52,7 +53,7 @@ class IncommingMessageQueue:
         )
         main_arguments = {
             # при nack-е будут попадать в dead_letter_exchange
-            "x-dead-letter-exchange": settings.RMQ_dead_exchange,
+            "x-dead-letter-exchange": settings.RMQ_dead_exchange
         }
         dead_arguments = {
             # при nack-е будут попадать в dead_letter_exchange

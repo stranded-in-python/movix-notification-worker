@@ -25,7 +25,7 @@ def get_logging_config(
         "formatters": {
             "verbose": {"format": format},
             "default": {
-                "fmt": "%(asctime)s:%(name)s:%(levelname)s:%(module)s:%(funcName)s:%(message)s",
+                "fmt": "%(asctime)s:%(name)s:%(levelname)s:%(module)s:%(funcName)s:%(message)s"
             },
         },
         "handlers": {
@@ -52,9 +52,7 @@ def get_logging_config(
                 "mode": "a",
             },
         },
-        "loggers": {
-            "": {"handlers": handlers, "level": level},
-        },
+        "loggers": {"": {"handlers": handlers, "level": level}},
         "root": {"level": level, "formatter": "verbose", "handlers": handlers},
     }
 

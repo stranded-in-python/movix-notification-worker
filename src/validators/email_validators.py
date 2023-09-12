@@ -1,8 +1,9 @@
+from sendgrid.helpers.mail import From, Mail, To
+from sib_api_v3_sdk import SendSmtpEmail
+
 from core.config import settings
 from core.loggers import LOGGER
 from models.emails import EmailMessages
-from sendgrid.helpers.mail import From, Mail, To
-from sib_api_v3_sdk import SendSmtpEmail
 
 from .abstract import ValidatorABC
 
