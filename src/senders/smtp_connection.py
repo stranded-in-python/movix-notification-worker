@@ -1,11 +1,14 @@
 import smtplib
 from typing import cast
 
-from db.base import Connector, ConnectionManager
 from core.config import settings
+from db.base import ConnectionManager, Connector
+
 
 class SMTPConnector(Connector):
-    def __init__(self, smtp_host: str = settings.smtp_host, smtp_port: int = settings.smtp_port):
+    def __init__(
+        self, smtp_host: str = settings.smtp_host, smtp_port: int = settings.smtp_port
+    ):
         super().__init__()
         self.smtp_host = smtp_host
         self.smtp_port = smtp_port
@@ -21,7 +24,7 @@ class SMTPConnector(Connector):
 
     def _connect(self) -> smtplib.SMTP:
         return smtplib.SMTP(self.smtp_host, self.smtp_port)
-    
+
 
 class SMTPConnectionManager(ConnectionManager):
     def __init__(self, connector: SMTPConnector):
