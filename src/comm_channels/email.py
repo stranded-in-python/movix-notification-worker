@@ -1,5 +1,3 @@
-import json
-
 from core.loggers import LOGGER
 from enrichers.abstract import TemplateEnricherABC
 from senders.abstract import SenderABC

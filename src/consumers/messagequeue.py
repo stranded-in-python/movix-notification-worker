@@ -115,6 +115,8 @@ class IncommingMessageQueue:
 
         await self._main_queue.consume(self.process_message)
 
+        print(self.comm_channels)
+
         await asyncio.Future()
 
     async def stop(self):
