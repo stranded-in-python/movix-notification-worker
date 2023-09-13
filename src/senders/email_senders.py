@@ -1,3 +1,5 @@
+from email.mime.multipart import MIMEMultipart
+
 import sib_api_v3_sdk.configuration
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
@@ -7,6 +9,7 @@ from sib_api_v3_sdk.rest import ApiException
 from core.loggers import LOGGER
 
 from .abstract import SenderABC
+from .smtp_connection import SMTPConnectionManager, SMTPConnector
 
 
 class SenderBrevo(SenderABC):
@@ -40,3 +43,18 @@ class SenderSndgrd(SenderABC, SendGridAPIClient):
         except ApiException as e:
             LOGGER.error("Failed to send email %s with:%s", email, e.reason)
             return e.reason
+
+
+class SenderSMTP(SenderABC):
+    def __init__(
+        self, manager: SMTPConnectionManager = SMTPConnectionManager(SMTPConnector())
+    ):
+        self.manager = manager
+
+    async def send(self, email: MIMEMultipart):
+        # result = self.manager.get_connection().sendmail(email["From"], to_addrs=email["Bcc"], msg=email.as_string())
+        try:
+            self.manager.get_connection().send_message(email)
+        except Exception as e:
+            LOGGER.error("Failed to send email %s with:%s", email, e)
+            return e

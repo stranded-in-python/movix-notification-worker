@@ -1,7 +1,9 @@
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 from sendgrid.helpers.mail import From, Mail, To
 from sib_api_v3_sdk import SendSmtpEmail
 
-from core.config import settings
 from core.loggers import LOGGER
 from models.emails import EmailMessages
 
@@ -53,6 +55,23 @@ class ValidatorEmailBrevo(ValidatorEmail):
                     subject=validated.subject,
                     html_content=validated.message,
                 )
+            except Exception as e:
+                LOGGER.error("Failed to validate emails %s for brevo: %s", msg, e)
+                return e
+            return messages
+        return validated
+
+
+class ValidatorEmailSMTP(ValidatorEmail):
+    def validate_for_sender(self, msg: dict) -> MIMEMultipart | Exception:
+        validated = self.validate_for_send(msg)
+        if not isinstance(validated, Exception):
+            try:
+                messages = MIMEMultipart()
+                messages["From"] = validated.sender
+                messages["Bcc"] = validated.recipients
+                messages["Subject"] = validated.subject
+                messages.attach(MIMEText(validated.message, "html"))
             except Exception as e:
                 LOGGER.error("Failed to validate emails %s for brevo: %s", msg, e)
                 return e
