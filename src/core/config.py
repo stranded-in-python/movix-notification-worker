@@ -9,7 +9,9 @@ class Settings(BaseSettings):
     sendgrid_api_key: str = Field("", env="SNDGRD_API_KEY")
     brevo_api_key: str = Field("", env="BREVO_API_KEY")
 
-    smtp_host: str = Field("BREVO", env="SMTP_HOST")
+    smtp_sender: str = Field("MAILHOG", env="SMTP_SENDER")
+    smtp_host: str = Field("localhost", env="SMTP_HOST")
+    smtp_port: int = Field(1025, env="SMTP_PORT")
 
     amqp_login: str = Field("guest", env="AMQP_LOGIN")
     amqp_password: str = Field("guest", env="AMQP_PASSWORD")
