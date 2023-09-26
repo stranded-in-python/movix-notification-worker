@@ -42,6 +42,8 @@ class Settings(BaseSettings):
     templates_id_field: str = Field("id", env="TEMPLATES_ID_FIELD")
     templates_body_field: str = Field("body", env="TEMPLATES_BODY_FIELD")
 
+    sentry_dsn_api: str = ""
+
     @property
     def amqp_url(self):
         return f"amqp://{self.amqp_login}:{self.amqp_password}@{self.amqp_host}:{self.amqp_port}/%2F"
@@ -52,3 +54,8 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+if settings.sentry_dsn_api:
+    import sentry_sdk  # type: ignore
+
+    sentry_sdk.init(dsn=settings.sentry_dsn_api, traces_sample_rate=1.0)
